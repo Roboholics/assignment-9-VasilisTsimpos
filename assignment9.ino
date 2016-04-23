@@ -5,7 +5,7 @@ Odometer encoderLeft(190), encoderRight(190); //Βάλτε τους δικούς
 Gyroscope gyro(13); //Βάλτε την κατάλληλη τιμή σύμφωνα με το γυροσκόπιό σας
 Car folkracer;
 SR04 sonarLeft, sonarRight, sonarFront; //dilwse tis metavlites sonarLeft, sonarRight kai sonarFront pou antiproswpevoun tous iperixous
-SoftwareSerial bluetooth(6,7); //συνδέστε το bluetooth ως εξής: Το RX του Bluetooth στο pin 6 και το ΤΧ του bluetooth στο pin 7 (VCC -> 5V, GND -> GND)
+SoftwareSerial bluetooth(6, 7); //συνδέστε το bluetooth ως εξής: Το RX του Bluetooth στο pin 6 και το ΤΧ του bluetooth στο pin 7 (VCC -> 5V, GND -> GND)
 
 /* Χρησιμοποιήστε τα σωστά pins!!!! */
 const int SONAR_LEFT_TRIGGER = 4; //trigger του αριστερού υπέρηχου
@@ -29,7 +29,7 @@ void setup() {
   folkracer.enableCruiseControl(); //ξεκινάει τον έλεγχο της ταχύτητας του αυτοκινήτου
   gyro.begin(); //ξεκινάει τις μετρήσεις στο γυροσκόπειο
   /* Εάν θέλετε να διαβάσετε απλά τις αποστάσεις, δίχως να κινείται το αυτοκινητάκι, βάλτε ταχύτητα 0 στην παρακάτω γραμμή */
-  folkracer.setSpeed(0.2); //θέτει την ταχύτητα στο αυτοκινητάκι στα 0.2 μέτρα ανά δευτερόλεπτο (εάν είναι πολύ αργό, αυξήστε λίγο την ταχύτητα)
+  folkracer.setSpeed(0); //θέτει την ταχύτητα στο αυτοκινητάκι στα 0.2 μέτρα ανά δευτερόλεπτο (εάν είναι πολύ αργό, αυξήστε λίγο την ταχύτητα)
   folkracer.setAngle(0); //Το αυτοκινητάκι πηγαίνει ευθεία
 }
 
@@ -43,10 +43,15 @@ void loop() {
   bluetooth.print(leftDistance);
   bluetooth.print(",");
   bluetooth.println(rightDistance);
-  //TO-DO για το σχολείο: Κινήστε το αυτοκινητάκι στην πίστα και ΑΣΥΡΜΑΤΑ δείτε τις αποστάσεις στον υπολογιστή, μέσω bluetooth (δεν χρειάζεται επιπλέον κώδικας)
-  //TO-DO για το σπίτι: Κάντε το αυτοκινητάκι να προσπαθεί να μείνει στη μέση των δύο τοίχων. Για αρχή, δοκιμάστε αυτή τη λογική: Εάν απέχει από τον δεξιά τοιχο περισσότερο
-  //από ότι τον αριστερό, στρίψτε δεξιά, αλλιώς αριστερά. Το πόσο θα στρίψετε αριστερά, με το folkracer.setAngle θα το βρείτε πειραματικά. Αρχίστε τις δοκιμές με το setAngle(50).
-  //Εάν βρίσκει εμπόδιο μπροστά σε κοντινή απόσταση, ας στρίβει προς τα δεξιά κατά 75 μοίρες, με το setAngle.
-  //Στο σχολείο, να διαβάζετε (στο serial monitor του Arduino IDE) τις αποστάσεις που ανιχνεύει το αυτοκινητάκι ασύρματα μέσω bluetooth, έτσι ώστε να καταλάβετε τι "διαβάζει"
-  //το αυτοκινητάκι όταν κινείται στην πίστα!  
+
+  if (rightDistance > leftDistance) {//Aν το αυτοκινητάκι απέχει περισότερο από το δεξί εμπόδιο
+    folkracer.setAngle(-50);//Στρήψε αριστερά
+  }
+  if (leftDistance > rightDistance) {//Aν το αυτοκινητάκι απέχει περισότερο από το αριστερά εμπόδιο
+    folkracer.setAngle(50);//Στρήψε δεξία
+  }
+  if (frontDistance < 30 && frontDistance > 0) { //Αν η μπροστινή απόσταση είναι < 30 και > 0
+    folkracer.setAngle(75);//Στρήψε δεξια
+  }
 }
+
