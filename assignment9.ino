@@ -44,14 +44,21 @@ void loop() {
   bluetooth.print(",");
   bluetooth.println(rightDistance);
 
-  if (rightDistance > leftDistance) {//Aν το αυτοκινητάκι απέχει περισότερο από το δεξί εμπόδιο
+  if (rightDistance < 30 && rightDistance > 0) {//Αν η δεξιά απόσταση είναι < 30 και > 0
     folkracer.setAngle(-50);//Στρήψε αριστερά
+    bluetooth.println("strivei aristera");
   }
-  if (leftDistance > rightDistance) {//Aν το αυτοκινητάκι απέχει περισότερο από το αριστερά εμπόδιο
+  if (leftDistance < 30 && leftDistance > 0) {//Αν η αριστερή απόσταση είναι < 30 και > 0
     folkracer.setAngle(50);//Στρήψε δεξία
+    bluetooth.println("strivei deksia");
   }
   if (frontDistance < 30 && frontDistance > 0) { //Αν η μπροστινή απόσταση είναι < 30 και > 0
     folkracer.setAngle(75);//Στρήψε δεξια
+    bluetooth.println("strivei deksia");
+  }
+  if (rightDistance > 30 && leftDistance > 30) {//Αν η δεξιά απόσταση είναι > 30 και η αριστερή απόσταση > 30
+    folkracer.setAngle(0);//Προχόρα ευθία
+    bluetooth.println("proxoraei eutia");
   }
 }
 
