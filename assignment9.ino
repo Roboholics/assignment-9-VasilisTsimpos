@@ -54,7 +54,7 @@ void loop() {
   }
   if (frontDistance < 30 && frontDistance > 0) { //Αν η μπροστινή απόσταση είναι < 30 και > 0
     folkracer.setAngle(75);//Στρήψε δεξια
-    bluetooth.println("strivei deksia");
+    bluetooth.println("strivei poli deksia");
   }
   if (rightDistance > 30 && leftDistance > 30) {//Αν η δεξιά απόσταση είναι > 30 και η αριστερή απόσταση > 30
     folkracer.setAngle(0);//Προχόρα ευθία
